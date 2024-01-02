@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.creatorsyndrome.storyengine.StoryengineMod;
 import net.creatorsyndrome.storyengine.entity.ModernNPCEntity;
+import net.creatorsyndrome.storyengine.geckolib.ModernNPCModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -13,6 +14,7 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 public class ModernNPCRender extends GeoEntityRenderer<ModernNPCEntity> {
     public ModernNPCRender(EntityRendererProvider.Context renderManager) {
+        super(renderManager, new ModernNPCModel());
         this.shadowRadius = 0.3f;
     }
 
