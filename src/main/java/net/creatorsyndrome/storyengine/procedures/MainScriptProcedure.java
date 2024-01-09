@@ -8,6 +8,8 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraft.world.level.LevelAccessor;
 
 import net.creatorsyndrome.storyengine.network.StoryengineModVariables;
+import net.creatorsyndrome.storyengine.procedures.SetDialogVariantsProcedure;
+import net.creatorsyndrome.storyengine.procedures.SendMessageProcedure;
 
 import javax.annotation.Nullable;
 
@@ -26,7 +28,11 @@ public class MainScriptProcedure {
 
 	private static void execute(@Nullable Event event, LevelAccessor world) {
 		if (StoryengineModVariables.MapVariables.get(world).current_story_id == 0) {
-			StoryengineModVariables.MapVariables.get(world).current_story_id = 1;
+			SetDialogVariantsProcedure.execute(world, 1, 2, 3, "Да", "Нет", "Пока", "Хочешь я подвигаюсь ?");
+		}
+		if (StoryengineModVariables.MapVariables.get(world).current_story_id == 2) {
+			SendMessageProcedure.execute(world, "Ну и не надо", "Рандомный чел");
+			StoryengineModVariables.MapVariables.get(world).current_story_id = 3;
 			StoryengineModVariables.MapVariables.get(world).syncData(world);
 		}
 	}
