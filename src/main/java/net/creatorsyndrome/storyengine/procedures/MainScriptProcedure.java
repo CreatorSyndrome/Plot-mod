@@ -35,7 +35,6 @@ public class MainScriptProcedure {
 	}
 
 	private static void execute(@Nullable Event event, LevelAccessor world) {
-		SendMessageProcedure.execute(world, String.valueOf(world.getServer().getTickCount()), "server");
 		if (StoryengineModVariables.MapVariables.get(world).current_story_id == 0) {
 			//spawn of npc
 			if (world instanceof ServerLevel _level) {
