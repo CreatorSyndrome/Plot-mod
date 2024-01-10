@@ -46,6 +46,8 @@ public class MainScriptProcedure {
 				world.addFreshEntity(entityToSpawn);
 			}
 			SendMessageProcedure.execute(world, "Эй ты !", "Рандомный чел");
+			StoryengineModVariables.MapVariables.get(world).current_story_id = -1;
+			StoryengineModVariables.MapVariables.get(world).syncData(world);
 			SetDialogVariantsProcedure.execute(world, 1, 2, 3, "Да", "Нет", "Пока", "Хочешь я подвигаюсь ?");
 		}
 		if (StoryengineModVariables.MapVariables.get(world).current_story_id == 2) {
