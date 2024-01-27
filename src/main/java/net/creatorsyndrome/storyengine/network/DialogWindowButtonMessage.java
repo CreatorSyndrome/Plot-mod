@@ -66,15 +66,15 @@ public class DialogWindowButtonMessage {
 			return;
 		if (buttonID == 0) {
 
-			GoDialog1Procedure.execute(world);
+			GoDialog1Procedure.execute(world, entity);
 		}
 		if (buttonID == 1) {
 
-			GoDialog2Procedure.execute(world);
+			GoDialog2Procedure.execute(world, entity);
 		}
 		if (buttonID == 2) {
 
-			GoDialog3Procedure.execute(world);
+			GoDialog3Procedure.execute(world, entity);
 		}
 	}
 
