@@ -1,6 +1,8 @@
 
 package net.creatorsyndrome.storyengine.entity;
 
+import net.creatorsyndrome.storyengine.network.StoryengineModVariables;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.network.PlayMessages;
 import net.minecraftforge.network.NetworkHooks;
@@ -55,6 +57,8 @@ import net.creatorsyndrome.storyengine.procedures.IfModeWalkerProcedure;
 import net.creatorsyndrome.storyengine.procedures.IfModeFollowerProcedure;
 import net.creatorsyndrome.storyengine.procedures.IfModeAttackerProcedure;
 import net.creatorsyndrome.storyengine.init.StoryengineModEntities;
+import net.creatorsyndrome.storyengine.network.StoryengineModVariables;
+import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nullable;
 
@@ -226,13 +230,15 @@ public class NPCEntity extends TamableAnimal {
 					this.setPersistenceRequired();
 			}
 		}
-		double x = this.getX();
-		double y = this.getY();
-		double z = this.getZ();
-		Entity entity = this;
-		Level world = this.level;
+		if (this.getPersistentData().getString("name").equals(StoryengineModVariables.MapVariables.get(this.level).whototalkwith)) {
+			double x = this.getX();
+			double y = this.getY();
+			double z = this.getZ();
+			Entity entity = this;
+			Level world = this.level;
 
-		OpenDialogWindowProcedure.execute(world, x, y, z, sourceentity);
+			OpenDialogWindowProcedure.execute(world, x, y, z, sourceentity);
+		}
 		return retval;
 	}
 

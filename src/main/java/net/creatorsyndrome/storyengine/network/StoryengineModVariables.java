@@ -96,6 +96,8 @@ public class StoryengineModVariables {
 		public double variant_3_to = 0;
 		public String phrase = "\"\"";
 
+		public String whototalkwith = "\"\"";
+
 		public static MapVariables load(CompoundTag tag) {
 			MapVariables data = new MapVariables();
 			data.read(tag);

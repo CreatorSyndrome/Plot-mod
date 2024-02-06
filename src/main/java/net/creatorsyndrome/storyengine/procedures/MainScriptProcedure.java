@@ -40,13 +40,15 @@ public class MainScriptProcedure {
 			if (world instanceof ServerLevel _level) {
 				Entity entityToSpawn = new NPCEntity(StoryengineModEntities.NPC.get(), _level);
 				entityToSpawn.moveTo(70, 70, 70, world.getRandom().nextFloat() * 360F, 0);
-				entityToSpawn.getPersistentData().putString("name", "randomguy");
+				entityToSpawn.getPersistentData().putString("name", "Рандомный чел");
 				if (entityToSpawn instanceof Mob _mobToSpawn)
 					_mobToSpawn.finalizeSpawn(_level, world.getCurrentDifficultyAt(entityToSpawn.blockPosition()), MobSpawnType.MOB_SUMMONED, null, null);
 				world.addFreshEntity(entityToSpawn);
 			}
 			SendMessageProcedure.execute(world, "Эй ты !", "Рандомный чел");
 			StoryengineModVariables.MapVariables.get(world).current_story_id = -1;
+			StoryengineModVariables.MapVariables.get(world).syncData(world);
+			StoryengineModVariables.MapVariables.get(world).whototalkwith = "Рандомный чел";
 			StoryengineModVariables.MapVariables.get(world).syncData(world);
 			SetDialogVariantsProcedure.execute(world, 1, 2, 3, "Да", "Нет", "Пока", "Хочешь я подвигаюсь ?");
 		}
