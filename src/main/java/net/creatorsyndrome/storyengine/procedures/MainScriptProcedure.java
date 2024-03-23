@@ -18,6 +18,8 @@ import net.creatorsyndrome.storyengine.network.StoryengineModVariables;
 import net.creatorsyndrome.storyengine.procedures.SetDialogVariantsProcedure;
 import net.creatorsyndrome.storyengine.procedures.SendMessageProcedure;
 
+import net.creatorsyndrome.storyengine.entity.ModernNPCEntity;
+
 import javax.annotation.Nullable;
 
 @Mod.EventBusSubscriber
@@ -56,6 +58,12 @@ public class MainScriptProcedure {
 			SendMessageProcedure.execute(world, "Ну и не надо", "Рандомный чел");
 			StoryengineModVariables.MapVariables.get(world).current_story_id = 3;
 			StoryengineModVariables.MapVariables.get(world).syncData(world);
+		}
+		if (StoryengineModVariables.MapVariables.get(world).current_story_id == 1) {
+			SendMessageProcedure.execute(world, "хржфцц", "Рандомный чел");
+			StoryengineModVariables.MapVariables.get(world).current_story_id = -1;
+			StoryengineModVariables.MapVariables.get(world).syncData(world);
+
 		}
 	}
 }

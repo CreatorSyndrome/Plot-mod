@@ -1,18 +1,27 @@
 package net.creatorsyndrome.storyengine.entity;
 
+import net.creatorsyndrome.storyengine.network.StoryengineModVariables;
+import net.creatorsyndrome.storyengine.procedures.OpenDialogWindowProcedure;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -25,10 +34,10 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class ModernNPCEntity extends Animal implements IAnimatable {
+public class ModernNPCEntity extends TamableAnimal implements IAnimatable {
     private AnimationFactory factory = new AnimationFactory(this);
 
-    public ModernNPCEntity(EntityType<? extends Animal> entityType, Level level) {
+    public ModernNPCEntity(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
     }
 
@@ -64,6 +73,58 @@ public class ModernNPCEntity extends Animal implements IAnimatable {
     public void registerControllers(AnimationData data) {
         data.addAnimationController(new AnimationController(this, "controller",
                 0, this::predicate));
+    }
+
+    @Override
+    public InteractionResult mobInteract(Player sourceentity, InteractionHand hand) {
+        ItemStack itemstack = sourceentity.getItemInHand(hand);
+        InteractionResult retval = InteractionResult.sidedSuccess(this.level.isClientSide());
+        Item item = itemstack.getItem();
+        if (itemstack.getItem() instanceof SpawnEggItem) {
+            retval = super.mobInteract(sourceentity, hand);
+        } else if (this.level.isClientSide()) {
+            retval = (this.isTame() && this.isOwnedBy(sourceentity) || this.isFood(itemstack)) ? InteractionResult.sidedSuccess(this.level.isClientSide()) : InteractionResult.PASS;
+        } else {
+            if (this.isTame()) {
+                if (this.isOwnedBy(sourceentity)) {
+                    if (item.isEdible() && this.isFood(itemstack) && this.getHealth() < this.getMaxHealth()) {
+                        this.usePlayerItem(sourceentity, hand, itemstack);
+                        this.heal((float) item.getFoodProperties().getNutrition());
+                        retval = InteractionResult.sidedSuccess(this.level.isClientSide());
+                    } else if (this.isFood(itemstack) && this.getHealth() < this.getMaxHealth()) {
+                        this.usePlayerItem(sourceentity, hand, itemstack);
+                        this.heal(4);
+                        retval = InteractionResult.sidedSuccess(this.level.isClientSide());
+                    } else {
+                        retval = super.mobInteract(sourceentity, hand);
+                    }
+                }
+            } else if (this.isFood(itemstack)) {
+                this.usePlayerItem(sourceentity, hand, itemstack);
+                if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, sourceentity)) {
+                    this.tame(sourceentity);
+                    this.level.broadcastEntityEvent(this, (byte) 7);
+                } else {
+                    this.level.broadcastEntityEvent(this, (byte) 6);
+                }
+                this.setPersistenceRequired();
+                retval = InteractionResult.sidedSuccess(this.level.isClientSide());
+            } else {
+                retval = super.mobInteract(sourceentity, hand);
+                if (retval == InteractionResult.SUCCESS || retval == InteractionResult.CONSUME)
+                    this.setPersistenceRequired();
+            }
+        }
+        if (this.getPersistentData().getString("name").equals(StoryengineModVariables.MapVariables.get(this.level).whototalkwith)) {
+            double x = this.getX();
+            double y = this.getY();
+            double z = this.getZ();
+            Entity entity = this;
+            Level world = this.level;
+
+            OpenDialogWindowProcedure.execute(world, x, y, z, sourceentity);
+        }
+        return retval;
     }
 
     @Override
