@@ -4,6 +4,7 @@
  */
 package net.creatorsyndrome.storyengine.init;
 
+import net.creatorsyndrome.storyengine.entity.ModernNPCEntity;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.DeferredRegister;
@@ -27,6 +28,11 @@ public class StoryengineModEntities {
 
 					.sized(0.6f, 1.8f));
 
+	public static final RegistryObject<EntityType<ModernNPCEntity>> ModernNPC = register("modernnpc",
+			EntityType.Builder.of(ModernNPCEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
+
+					.sized(0.6f, 1.8f));
+
 	private static <T extends Entity> RegistryObject<EntityType<T>> register(String registryname, EntityType.Builder<T> entityTypeBuilder) {
 		return REGISTRY.register(registryname, () -> (EntityType<T>) entityTypeBuilder.build(registryname));
 	}
@@ -35,11 +41,13 @@ public class StoryengineModEntities {
 	public static void init(FMLCommonSetupEvent event) {
 		event.enqueueWork(() -> {
 			NPCEntity.init();
+			ModernNPCEntity.init();
 		});
 	}
 
 	@SubscribeEvent
 	public static void registerAttributes(EntityAttributeCreationEvent event) {
 		event.put(NPC.get(), NPCEntity.createAttributes().build());
+		event.put(ModernNPC.get(), ModernNPCEntity.createMobAttributes().build());
 	}
 }

@@ -4,6 +4,7 @@
  */
 package net.creatorsyndrome.storyengine.init;
 
+import net.creatorsyndrome.storyengine.client.renderer.ModernNPCRender;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -16,5 +17,6 @@ public class StoryengineModEntityRenderers {
 	@SubscribeEvent
 	public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		event.registerEntityRenderer(StoryengineModEntities.NPC.get(), NPCRenderer::new);
+		event.registerEntityRenderer(StoryengineModEntities.ModernNPC.get(), ModernNPCRender::new);
 	}
 }
