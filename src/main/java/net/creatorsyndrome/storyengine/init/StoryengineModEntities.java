@@ -4,6 +4,7 @@
  */
 package net.creatorsyndrome.storyengine.init;
 
+import net.creatorsyndrome.storyengine.entity.CameraEntity;
 import net.creatorsyndrome.storyengine.entity.ModernNPCEntity;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -33,6 +34,11 @@ public class StoryengineModEntities {
 
 					.sized(0.6f, 1.8f));
 
+	public static final RegistryObject<EntityType<CameraEntity>> CAMERA = register("camera",
+			EntityType.Builder.<CameraEntity>of(CameraEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
+
+					.sized(0.6f, 1.8f));
+
 	private static <T extends Entity> RegistryObject<EntityType<T>> register(String registryname, EntityType.Builder<T> entityTypeBuilder) {
 		return REGISTRY.register(registryname, () -> (EntityType<T>) entityTypeBuilder.build(registryname));
 	}
@@ -42,6 +48,7 @@ public class StoryengineModEntities {
 		event.enqueueWork(() -> {
 			NPCEntity.init();
 			ModernNPCEntity.init();
+			CameraEntity.init();
 		});
 	}
 
@@ -49,5 +56,6 @@ public class StoryengineModEntities {
 	public static void registerAttributes(EntityAttributeCreationEvent event) {
 		event.put(NPC.get(), NPCEntity.createAttributes().build());
 		event.put(ModernNPC.get(), ModernNPCEntity.createMobAttributes().build());
+		event.put(CAMERA.get(), CameraEntity.createMobAttributes().build());
 	}
 }

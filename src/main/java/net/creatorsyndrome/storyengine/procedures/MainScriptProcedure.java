@@ -1,12 +1,15 @@
 package net.creatorsyndrome.storyengine.procedures;
 
 import net.creatorsyndrome.storyengine.entity.NPCEntity;
+import net.creatorsyndrome.storyengine.entity.CameraEntity;
+import net.creatorsyndrome.storyengine.entity.ModernNPCEntity;
 import net.creatorsyndrome.storyengine.init.StoryengineModEntities;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -17,8 +20,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.creatorsyndrome.storyengine.network.StoryengineModVariables;
 import net.creatorsyndrome.storyengine.procedures.SetDialogVariantsProcedure;
 import net.creatorsyndrome.storyengine.procedures.SendMessageProcedure;
-
-import net.creatorsyndrome.storyengine.entity.ModernNPCEntity;
 
 import javax.annotation.Nullable;
 
@@ -63,7 +64,16 @@ public class MainScriptProcedure {
 			SendMessageProcedure.execute(world, "хржфцц", "Рандомный чел");
 			StoryengineModVariables.MapVariables.get(world).current_story_id = -1;
 			StoryengineModVariables.MapVariables.get(world).syncData(world);
-
+			if (world instanceof ServerLevel _level) {
+				CameraEntity camera = new CameraEntity(StoryengineModEntities.CAMERA.get(), _level);
+				Player player = world.players().get(0);
+				camera.moveTo(player.getPosition(0));
+				camera.setPlayerPosition(player.getX(), player.getY(), player.getZ());
+				camera.setDestination(camera.px, camera.py, camera.pz + 10);
+				camera.setStartPosition(camera.px, camera.py, camera.pz);
+				camera.duration = 600;
+				camera.active = true;
+			}
 		}
 	}
 }
