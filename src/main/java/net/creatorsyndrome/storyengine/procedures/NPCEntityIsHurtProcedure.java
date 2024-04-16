@@ -12,6 +12,6 @@ public class NPCEntityIsHurtProcedure {
 		if (entity == null)
 			return;
 		if (!world.isClientSide() && world.getServer() != null)
-			world.getServer().getPlayerList().broadcastMessage(new TextComponent(("" + (entity instanceof TamableAnimal _tamEnt ? (Entity) _tamEnt.getOwner() : null))), ChatType.SYSTEM, Util.NIL_UUID);
+			world.getServer().getPlayerList().broadcastMessage(new TextComponent(("" + (entity.getPersistentData().getString("name")))), ChatType.SYSTEM, Util.NIL_UUID);
 	}
 }
